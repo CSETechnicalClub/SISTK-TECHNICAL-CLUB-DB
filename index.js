@@ -4,6 +4,7 @@ const Student = require("./models/student.model.js");
 const studentRoute = require("./routes/student.route.js");
 const app = express();
 const cors = require("cors");
+require("dotenv").config();
 app.use(cors());
 
 const http = require("http");
@@ -26,6 +27,13 @@ const findAvailablePort = (startPort) => {
     console.log(`Server is running on port ${startPort}`);
   });
 
+  const uri = process.env.MONGODB_URI;
+
+  if (!uri) {
+    console.error("MONGODB_URI environment variable is not set.");
+    process.exit(1);
+  }
+
   server.on("error", (err) => {
     if (err.code === "EADDRINUSE") {
       console.log(`Port ${startPort} in use, trying ${startPort + 1}`);
@@ -38,10 +46,12 @@ const findAvailablePort = (startPort) => {
 
 // Connect to MongoDB and start the server
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(
+    "mongodb+srv://Admin:96NUfkCt5QHmJ0UP@sistk-db.eiem09u.mongodb.net/?retryWrites=true&w=majority&appName=SISTK-DB"
+  )
   .then(() => {
     console.log("Connected to database");
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || PORT;
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

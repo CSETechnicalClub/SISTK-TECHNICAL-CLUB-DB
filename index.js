@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 const Student = require("./models/student.model.js");
 const studentRoute = require("./routes/student.route.js");
 const app = express();
+const cors = require("cors");
+app.use(cors());
+
+const http = require("http");
+const PORT = 7200; // Change this to your preferred port
 
 // Middleware
 app.use(express.json());
@@ -21,8 +26,8 @@ const findAvailablePort = (startPort) => {
     console.log(`Server is running on port ${startPort}`);
   });
 
-  server.on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
+  server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
       console.log(`Port ${startPort} in use, trying ${startPort + 1}`);
       findAvailablePort(startPort + 1);
     } else {
@@ -33,9 +38,7 @@ const findAvailablePort = (startPort) => {
 
 // Connect to MongoDB and start the server
 mongoose
-  .connect(
-    "mongodb+srv://Admin:96NUfkCt5QHmJ0UP@sistk-db.eiem09u.mongodb.net/?retryWrites=true&w=majority&appName=SISTK-DB"
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("Connected to database");
     const PORT = process.env.PORT || 3000;
